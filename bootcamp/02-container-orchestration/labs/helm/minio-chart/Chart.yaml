@@ -1,0 +1,20 @@
+apiVersion: v2
+name: minio
+description: A Helm chart for MinIO object storage cluster
+type: application
+version: 1.0.0
+appVersion: RELEASE.2024-01-16T16-07-38Z
+home: https://min.io
+sources:
+  - https://github.com/minio/minio
+keywords:
+  - storage
+  - object-storage
+  - s3
+  - data-lake
+maintainers:
+  - name: BigQuery UTH Team
+    email: team@bigquery-uth.com
+dependencies: []
+annotations:
+  category: Storage
