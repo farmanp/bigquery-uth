@@ -1,0 +1,136 @@
+# Default values for minio chart
+# This is a YAML-formatted file.
+
+# MinIO image configuration
+image:
+  repository: minio/minio
+  tag: RELEASE.2024-01-16T16-07-38Z
+  pullPolicy: IfNotPresent
+
+# Number of MinIO replicas
+replicaCount: 4
+
+# MinIO credentials
+auth:
+  rootUser: admin
+  rootPassword: minio123
+  existingSecret: ""
+
+# Service configuration
+service:
+  type: ClusterIP
+  port: 9000
+  consolePort: 9001
+  annotations: {}
+
+# Ingress configuration
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: minio.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls: []
+
+# Resource limits and requests
+resources:
+  limits:
+    cpu: 2000m
+    memory: 4Gi
+  requests:
+    cpu: 500m
+    memory: 1Gi
+
+# Persistence configuration
+persistence:
+  enabled: true
+  storageClass: fast-ssd
+  size: 100Gi
+  accessModes:
+    - ReadWriteOnce
+
+# Security context
+securityContext:
+  enabled: true
+  runAsUser: 1001
+  runAsGroup: 1001
+  fsGroup: 1001
+
+# Pod security context
+podSecurityContext:
+  enabled: true
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+# Network policy
+networkPolicy:
+  enabled: false
+  ingress: []
+  egress: []
+
+# Node selector
+nodeSelector: {}
+
+# Tolerations
+tolerations: []
+
+# Affinity rules
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+    - weight: 100
+      podAffinityTerm:
+        labelSelector:
+          matchExpressions:
+          - key: app.kubernetes.io/name
+            operator: In
+            values:
+            - minio
+        topologyKey: kubernetes.io/hostname
+
+# Liveness probe configuration
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 30
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+
+# Readiness probe configuration
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+# Monitoring configuration
+monitoring:
+  enabled: false
+  prometheusAuthType: public
+
+# Environment variables
+extraEnvironmentVars: {}
+
+# Extra volumes and volume mounts
+extraVolumes: []
+extraVolumeMounts: []
+
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+
+# Horizontal Pod Autoscaler
+autoscaling:
+  enabled: false
+  minReplicas: 4
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
